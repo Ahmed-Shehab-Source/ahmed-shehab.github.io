@@ -1,5 +1,5 @@
 /**
- * AHMED SHEHAB — PORTFOLIO INTERACTIVITY & SIDE DATA PATH
+ * AHMED SHEHAB — PORTFOLIO INTERACTIVITY, SIDE PATH & STAGGERED REVEAL ANIMATIONS
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initClipboardButtons();
   initSmoothScroll();
   initSideDataPath();
-  initScrollReveal();
+  initStaggeredScrollReveal();
 });
 
 /* 1. Theme Toggle (Dark/Light) */
@@ -66,7 +66,7 @@ function updateThemeIcon(theme) {
 function initSideDataPath() {
   const sideFill = document.getElementById('side-path-fill');
 
-  window.addEventListener('scroll', () => {
+  function updatePathFill() {
     const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrolled = (winScroll / height) * 100;
@@ -74,11 +74,26 @@ function initSideDataPath() {
     if (sideFill) {
       sideFill.style.height = `${scrolled}%`;
     }
-  });
+  }
+
+  window.addEventListener('scroll', updatePathFill);
+  updatePathFill();
 }
 
-/* 3. Scroll-Triggered Reveal Animations */
-function initScrollReveal() {
+/* 3. Staggered Scroll-Triggered Reveal Animations ("Nice on the Eyes") */
+function initStaggeredScrollReveal() {
+  // Add staggered animation classes to grid children automatically
+  const grids = document.querySelectorAll('.pillars-grid, .skills-categories, .projects-grid, .edu-cert-grid, .contact-grid');
+  
+  grids.forEach(grid => {
+    const children = grid.children;
+    Array.from(children).forEach((child, index) => {
+      child.classList.add('reveal-on-scroll');
+      const delayClass = `reveal-delay-${(index % 4) + 1}`;
+      child.classList.add(delayClass);
+    });
+  });
+
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
 
   const revealObserver = new IntersectionObserver((entries) => {
@@ -88,11 +103,19 @@ function initScrollReveal() {
       }
     });
   }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.08,
+    rootMargin: '0px 0px -30px 0px'
   });
 
-  revealElements.forEach(el => revealObserver.observe(el));
+  revealElements.forEach(el => {
+    revealObserver.observe(el);
+    
+    // Check if element is already in initial viewport on page load
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add('is-visible');
+    }
+  });
 }
 
 /* 4. Mobile Navigation Menu */
