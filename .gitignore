@@ -1,0 +1,10 @@
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node / Scratch
+node_modules/
+*.log
+scratch/
+.tmp/
