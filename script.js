@@ -1,5 +1,5 @@
 /**
- * AHMED SHEHAB — PORTFOLIO INTERACTIVITY & DYNAMIC CONTROLS
+ * AHMED SHEHAB — PORTFOLIO INTERACTIVITY & SIDE DATA PATH
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectModals();
   initClipboardButtons();
   initSmoothScroll();
+  initSideDataPath();
+  initScrollReveal();
 });
 
 /* 1. Theme Toggle (Dark/Light) */
@@ -37,13 +39,14 @@ function updateThemeIcon(theme) {
   if (!toggleBtn) return;
   if (theme === 'light') {
     toggleBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-      </svg>`;
+      </svg>
+      <span>Dark Mode</span>`;
     toggleBtn.setAttribute('aria-label', 'Switch to dark mode');
   } else {
     toggleBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="5"></circle>
         <line x1="12" y1="1" x2="12" y2="3"></line>
         <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -53,12 +56,46 @@ function updateThemeIcon(theme) {
         <line x1="21" y1="12" x2="23" y2="12"></line>
         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-      </svg>`;
+      </svg>
+      <span>Light Mode</span>`;
     toggleBtn.setAttribute('aria-label', 'Switch to light mode');
   }
 }
 
-/* 2. Mobile Navigation Menu */
+/* 2. Left Side-Path Illuminated Line Filling on Scroll */
+function initSideDataPath() {
+  const sideFill = document.getElementById('side-path-fill');
+
+  window.addEventListener('scroll', () => {
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    
+    if (sideFill) {
+      sideFill.style.height = `${scrolled}%`;
+    }
+  });
+}
+
+/* 3. Scroll-Triggered Reveal Animations */
+function initScrollReveal() {
+  const revealElements = document.querySelectorAll('.reveal-on-scroll');
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  revealElements.forEach(el => revealObserver.observe(el));
+}
+
+/* 4. Mobile Navigation Menu */
 function initMobileMenu() {
   const menuBtn = document.getElementById('mobile-menu-btn');
   const navLinks = document.getElementById('nav-links');
@@ -76,7 +113,7 @@ function initMobileMenu() {
   }
 }
 
-/* 3. Dynamic Skill Tag Search / Filter */
+/* 5. Dynamic Skill Tag Search / Filter */
 function initSkillFilter() {
   const searchInput = document.getElementById('skills-search');
   const skillTags = document.querySelectorAll('.skill-tag');
@@ -98,7 +135,6 @@ function initSkillFilter() {
       }
     });
 
-    // Hide empty cards if all tags inside are hidden
     skillCards.forEach(card => {
       const visibleTags = card.querySelectorAll('.skill-tag[style*="display: inline-block"], .skill-tag:not([style*="display: none"])');
       if (term !== '' && visibleTags.length === 0) {
@@ -110,7 +146,7 @@ function initSkillFilter() {
   });
 }
 
-/* 4. Project Filter Tabs */
+/* 6. Project Filter Tabs */
 function initProjectFilters() {
   const filterBtns = document.querySelectorAll('.filter-btn');
   const projectCards = document.querySelectorAll('.project-card');
@@ -137,7 +173,7 @@ function initProjectFilters() {
   });
 }
 
-/* 5. Project Details Modal */
+/* 7. Project Details Modal */
 function initProjectModals() {
   const modalBackdrop = document.getElementById('modal-backdrop');
   const modalBody = document.getElementById('modal-body');
@@ -145,6 +181,36 @@ function initProjectModals() {
   const triggers = document.querySelectorAll('.project-details-trigger');
 
   const projectDetails = {
+    wesupport: `
+      <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">WE Multilingual Support Ticket Automation Bot</h3>
+      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">AI Engineering Repository | MARBERTv2, mT5, PyTorch, Streamlit</p>
+      
+      <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+        <strong>Technical & Architectural Highlights:</strong>
+        <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
+          <li>Trained on ~3,000 synthetic multilingual customer service tickets (Arabic, English, and Franco-Arabic).</li>
+          <li>Fine-tuned <strong>MARBERTv2</strong> to perform multi-class text classification for department auto-routing and sentiment identification.</li>
+          <li>Fine-tuned <strong>mT5 (Multilingual T5)</strong> to condense long multi-turn ticket threads into actionable short agent summaries.</li>
+          <li>Built a dual-mode Streamlit dashboard supporting real-time single-ticket lookup and batch CSV file processing for operations teams.</li>
+        </ul>
+      </div>
+      <a href="https://github.com/Ahmed-Shehab-Source/Ai-Engineering-projects/tree/main/WE-support-ticket-bot" target="_blank" rel="noopener" class="btn btn-primary" style="font-size: 0.85rem;">View Repository Source →</a>
+    `,
+    wechatbot: `
+      <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Telecom Egypt RAG Customer Support Chatbot</h3>
+      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">AI Engineering Repository | RAG, Qdrant Vector Database, LangChain, Streamlit</p>
+      
+      <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+        <strong>Technical & Architectural Highlights:</strong>
+        <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
+          <li>Extracted and chunked official Telecom Egypt (WE) website knowledge, plan details, and FAQ content.</li>
+          <li>Embedded chunked text vectors into a high-performance <strong>Qdrant vector store</strong> for semantic similarity search.</li>
+          <li>Engineered a Retrieval-Augmented Generation (RAG) query engine ensuring all chatbot responses are strictly grounded in retrieved context to eliminate hallucinations.</li>
+          <li>Delivered a conversational Streamlit chat interface supporting bilingual (Arabic & English) customer inquiries.</li>
+        </ul>
+      </div>
+      <a href="https://github.com/Ahmed-Shehab-Source/Ai-Engineering-projects/tree/main/we-chatbot" target="_blank" rel="noopener" class="btn btn-primary" style="font-size: 0.85rem;">View Repository Source →</a>
+    `,
     exology: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Exology – AI Finance Recorder & Accounting Dashboard</h3>
       <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">Competitive Hackathon Project | n8n, Gemini 2.5 Flash, Google Sheets, Telegram Bot API</p>
@@ -223,7 +289,7 @@ function initProjectModals() {
   }
 }
 
-/* 6. Copy to Clipboard Utility */
+/* 8. Copy to Clipboard Utility */
 function initClipboardButtons() {
   const copyBtns = document.querySelectorAll('.copy-btn');
   copyBtns.forEach(btn => {
@@ -240,7 +306,7 @@ function initClipboardButtons() {
   });
 }
 
-/* 7. Active Nav Scroll Indicator */
+/* 9. Active Nav Scroll Indicator */
 function initSmoothScroll() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-link');
