@@ -124,7 +124,7 @@ ul {
   position: fixed;
   left: 2rem;
   top: 5rem;
-  height: 0%;
+  height: 0;
   max-height: calc(100vh - 7rem);
   width: 4px;
   background: linear-gradient(180deg, var(--accent-blue), var(--accent-teal), var(--accent-indigo));

@@ -65,18 +65,21 @@ function updateThemeIcon(theme) {
 /* 2. Left Side-Path Illuminated Line Filling on Scroll */
 function initSideDataPath() {
   const sideFill = document.getElementById('side-path-fill');
+  const sideTrack = document.querySelector('.side-path-track');
+  if (!sideFill) return;
 
   function updatePathFill() {
-    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const scrolled = (winScroll / height) * 100;
-    
-    if (sideFill) {
-      sideFill.style.height = `${scrolled}%`;
-    }
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = maxScroll > 0 ? Math.min(Math.max(scrollTop / maxScroll, 0), 1) : 0;
+
+    const trackHeight = sideTrack ? sideTrack.clientHeight : 0;
+    sideFill.style.height = `${progress * trackHeight}px`;
   }
 
-  window.addEventListener('scroll', updatePathFill);
+  window.addEventListener('scroll', updatePathFill, { passive: true });
+  window.addEventListener('resize', updatePathFill);
+  window.addEventListener('load', updatePathFill);
   updatePathFill();
 }
 
@@ -206,33 +209,33 @@ function initProjectModals() {
   const projectDetails = {
     wesupport: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">WE Multilingual Support Ticket Automation Bot</h3>
-      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">AI Engineering Repository | MARBERTv2, mT5, PyTorch, Streamlit</p>
+      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">AI Engineering Repository (Telecom Egypt Internship) | MARBERTv2, mT5, PyTorch, Streamlit</p>
       
       <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
         <strong>Technical & Architectural Highlights:</strong>
         <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
-          <li>Trained on ~3,000 synthetic multilingual customer service tickets (Arabic, English, and Franco-Arabic).</li>
-          <li>Fine-tuned <strong>MARBERTv2</strong> to perform multi-class text classification for department auto-routing and sentiment identification.</li>
-          <li>Fine-tuned <strong>mT5 (Multilingual T5)</strong> to condense long multi-turn ticket threads into actionable short agent summaries.</li>
-          <li>Built a dual-mode Streamlit dashboard supporting real-time single-ticket lookup and batch CSV file processing for operations teams.</li>
+          <li>Built a multilingual (English/Arabic/Franco-Arabic) customer support-ticket bot on a custom-generated dataset of ~3,000 synthetic tickets.</li>
+          <li>Fine-tuned <strong>MARBERTv2</strong> to auto-route each ticket to the right department and flag customer sentiment.</li>
+          <li>Fine-tuned <strong>mT5</strong> to generate a short summary for the customer support agent.</li>
+          <li>Deployed as an interactive Streamlit dashboard supporting both single-ticket lookup and batch CSV file processing.</li>
         </ul>
       </div>
-      <a href="https://github.com/Ahmed-Shehab-Source/Ai-Engineering-projects/tree/main/WE-support-ticket-bot" target="_blank" rel="noopener" class="btn btn-primary" style="font-size: 0.85rem;">View Repository Source →</a>
+      <a href="https://github.com/Ahmed-Shehab-Source/Ai-Engineering-projects/tree/main/WE-support-ticket-bot" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem;">View Repository Source →</a>
     `,
     wechatbot: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Telecom Egypt RAG Customer Support Chatbot</h3>
-      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">AI Engineering Repository | RAG, Qdrant Vector Database, LangChain, Streamlit</p>
+      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">AI Engineering Repository (Telecom Egypt Internship) | RAG, Qdrant Vector DB, LLM Pipeline</p>
       
       <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
         <strong>Technical & Architectural Highlights:</strong>
         <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
-          <li>Extracted and chunked official Telecom Egypt (WE) website knowledge, plan details, and FAQ content.</li>
-          <li>Embedded chunked text vectors into a high-performance <strong>Qdrant vector store</strong> for semantic similarity search.</li>
-          <li>Engineered a Retrieval-Augmented Generation (RAG) query engine ensuring all chatbot responses are strictly grounded in retrieved context to eliminate hallucinations.</li>
-          <li>Delivered a conversational Streamlit chat interface supporting bilingual (Arabic & English) customer inquiries.</li>
+          <li>Scraped and chunked official Telecom Egypt company web content.</li>
+          <li>Embedded chunked vectors into a high-performance <strong>Qdrant vector store</strong>.</li>
+          <li>Served bilingual (Arabic/English) answers grounded strictly in retrieved context via an LLM pipeline to eliminate hallucinations.</li>
+          <li>Delivered real-time conversational assistance for customer queries with verified information grounding.</li>
         </ul>
       </div>
-      <a href="https://github.com/Ahmed-Shehab-Source/Ai-Engineering-projects/tree/main/we-chatbot" target="_blank" rel="noopener" class="btn btn-primary" style="font-size: 0.85rem;">View Repository Source →</a>
+      <a href="https://github.com/Ahmed-Shehab-Source/Ai-Engineering-projects/tree/main/we-chatbot" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem;">View Repository Source →</a>
     `,
     exology: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Exology – AI Finance Recorder & Accounting Dashboard</h3>
@@ -241,26 +244,28 @@ function initProjectModals() {
       <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
         <strong>Key Tech Highlights:</strong>
         <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
-          <li>Autonomous AI finance recording system for SMBs via Telegram accepting text, voice (.ogg), and photo inputs in English & Arabic.</li>
-          <li>Engineered 3 distinct n8n workflows: real-time transaction recording with Gemini 2.5 Flash, nightly 30-day financial forecasting, and a weekly AI CFO health score report.</li>
-          <li>Multi-modal AI pipeline: text → JSON, voice → transcription, receipt photo → structured data with validation rules and confidence scoring.</li>
-          <li>Automated cash drought detection with proactive Telegram alerts using rolling 90-day averages.</li>
+          <li>Designed and deployed a fully autonomous AI finance recording system for SMBs via Telegram, accepting text, voice, and photo inputs in Arabic and English — eliminating manual bookkeeping.</li>
+          <li>Engineered three n8n workflows: real-time transaction recording with Gemini 2.5 Flash AI extraction, a nightly 30-day financial forecasting engine, and a weekly AI CFO health score report.</li>
+          <li>Implemented multi-modal AI pipeline (text → JSON, voice .ogg → transcription, receipt photo → structured data) with data validation rules and confidence scoring before writing to Google Sheets.</li>
+          <li>Built automated cash drought detection with proactive Telegram alerts when projected 30-day balance turns negative, using rolling 90-day averages for forecast projections.</li>
         </ul>
       </div>
+      <a href="https://github.com/Ahmed-Shehab-Source" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem;">View Project on GitHub →</a>
     `,
     olist: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Olist Brazilian E-Commerce – BI Dashboard & Full Analytics Pipeline</h3>
-      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">Academic Research Project | Python, Power BI, Scikit-learn, KMeans, Plotly, Pandas</p>
+      <p style="color: var(--accent-teal); font-weight: 600; margin-bottom: 1.25rem;">Academic Research Project | Python, Power BI, Scikit-learn, KMeans, Plotly, Pandas | 9 Datasets, 100K+ Orders</p>
       
       <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
         <strong>Key Tech Highlights:</strong>
         <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
-          <li>End-to-end preprocessing across 9 relational datasets (100K+ orders), applying KNN imputation, ZIP-level geolocation median deduplication, and 99th-percentile winsorization.</li>
-          <li>Unified master analytical table with 10+ engineered features (lead_time_days, delivery_delay_days, is_late, freight_ratio).</li>
-          <li>Segmented 96K+ customers into 4 value tiers (Champions, At-Risk, New, Dormant) using RFM & K-Means (k=4 via Elbow & Silhouette scoring).</li>
-          <li>4-page Power BI executive dashboard diagnosing a R$316K (26.76%) revenue shortfall, backed by a 35-page strategic report with 9 prioritized recommendations.</li>
+          <li>Engineered an end-to-end preprocessing pipeline across 9 relational datasets (100K+ orders), resolving missing product dimensions via KNN imputation, deduplicating 1M+ geolocation records to a single ZIP-level median coordinate, and applying 99th-percentile winsorization to eliminate extreme price and freight outliers.</li>
+          <li>Constructed a unified master analytical table by merging all 9 source tables on order and customer keys, engineering 10+ features including lead_time_days, delivery_delay_days, is_late flag, freight_ratio, and purchase hour/day-of-week signals to power both BI reporting and downstream segmentation.</li>
+          <li>Segmented 96K+ customers into 4 value tiers (Champions, At-Risk, New, Dormant) using RFM and K-Means (k=4 selected via Elbow and Silhouette scoring), enabling targeted retention strategies estimated to recover 9% incremental revenue by shifting orders-per-customer from 1.01 to 1.10.</li>
+          <li>Delivered a 4-page Power BI executive dashboard diagnosing a R$316K (26.76%) revenue shortfall across 5,673 orders, isolating a demand-side volume gap as the root cause despite 92.18% on-time delivery and 78.11% positive sentiment; backed by a 35-page strategic report with 9 prioritised recommendations including Boleto conversion optimisation projected to recover 2,000+ confirmed monthly orders.</li>
         </ul>
       </div>
+      <a href="https://github.com/Ahmed-Shehab-Source" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem;">View Project on GitHub →</a>
     `,
     fda: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">FDA Drug Adverse Event Reports (2015–2026) | Classification Modeling</h3>
@@ -269,12 +274,13 @@ function initProjectModals() {
       <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
         <strong>Key Tech Highlights:</strong>
         <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
-          <li>14-step EDA audit on 528,000 pharmacovigilance records, eliminating 7 target-leakage columns and 9,371 Death-flagged text entries.</li>
-          <li>Developed 7 clinical risk features (is_elderly_polypharmacy, is_high_risk_route, reaction_drug_ratio).</li>
-          <li>SMOTE preprocessing expanding training set from ~475K to ~860K synthetic-augmented records.</li>
-          <li>Benchmarked 5 classifiers (Random Forest selected as production model for best Precision/Recall/F1 balance on ~105K untouched test records).</li>
+          <li>Conducted a 14-step EDA audit on 528,000 pharmacovigilance records (FAERS 2015-2026), identifying and removing 7 target-leakage columns and 9,371 Death-flagged text entries that would have inflated model accuracy by ~10% while producing a clinically useless classifier.</li>
+          <li>Developed 7 domain-specific clinical risk features capturing compounding fatality patterns absent from raw columns, including is_elderly_polypharmacy, is_high_risk_route (8 FDA IV/intraspinal/intracardiac codes), is_polypharmacy_high (6+ concurrent drugs), and reaction_drug_ratio as a systemic toxicity proxy.</li>
+          <li>Built a production-grade preprocessing pipeline resolving 72% missing patient weight via strategic exclusion, reducing 10,446-category text columns via frequency encoding, and applying SMOTE to rebalance a 10.3% minority class, expanding the training set from ~475K to ~860K synthetic-augmented records.</li>
+          <li>Benchmarked 5 classifiers (Logistic Regression baseline, Decision Tree, Random Forest, XGBoost, LightGBM); selected Random Forest as the production model for best Precision/Recall/F1 balance on fatality prediction, evaluated on an untouched real-distribution test set of ~105K records.</li>
         </ul>
       </div>
+      <a href="https://github.com/Ahmed-Shehab-Source" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem;">View Project on GitHub →</a>
     `,
     churn: `
       <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--accent-blue);">Customer Churn Analysis & Retention Strategy</h3>
@@ -283,12 +289,12 @@ function initProjectModals() {
       <div style="background: var(--bg-primary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
         <strong>Key Tech Highlights:</strong>
         <ul style="list-style: disc; margin-left: 1.2rem; margin-top: 0.5rem; color: var(--text-secondary);">
-          <li>Merged and validated 3 multi-source datasets (customer records, support tickets, activity logs) across 1,000+ records.</li>
-          <li>Identified an 18-point churn rate gap between free-tier (41%) and paid subscribers (23%).</li>
-          <li>Engineered a custom '30-Day Zero Activity Rate' KPI flagging at-risk users up to 30 days before cancellation.</li>
-          <li>Strategic retention report with 3 high-impact initiatives targeting free-to-paid conversion.</li>
+          <li>Cleaned, merged, and validated 3 multi-source datasets (customer records, support tickets, activity logs) across 1,000+ records, resolving inconsistent identifiers and missing engagement timestamps before any analysis.</li>
+          <li>Identified an 18-point churn rate gap between free-tier (41%) and paid subscribers (23%) via EDA; engineered a custom 30-Day Zero-Activity Rate KPI that flagged at-risk users up to 30 days before cancellation, enabling proactive intervention windows.</li>
+          <li>Translated findings into a strategic retention report recommending 3 high-impact initiatives including a free-to-paid conversion campaign targeting the 41% churning free-tier segment.</li>
         </ul>
       </div>
+      <a href="https://github.com/Ahmed-Shehab-Source" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="font-size: 0.85rem;">View Project on GitHub →</a>
     `
   };
 
